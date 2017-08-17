@@ -1,0 +1,94 @@
+<!doctype html>
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/angular.js"></script>
+<script src="/static/js/ng-infinite-scroll.min.js"></script>
+<style>
+            .container{
+                width:100%;
+                height:300px;
+                background: #f9f9f9;
+                padding: 5px;
+                font-family: verdana;
+                margin-bottom: 7px;
+                box-shadow: 0px 0px 2px 1px;
+            }
+
+            .userContainer{
+                width:500px;
+                height:110px;
+                background: #f9f9f9;
+                padding: 5px;
+                font-family: verdana;
+                margin-bottom: 7px;
+                box-shadow: 0px 0px 2px 1px;
+            }
+            .userContainer p{
+                font-size: 12px;
+            }
+            .emailView{
+                height:300px;
+                background: #f9f9f9;
+                padding: 0;
+                font-family: verdana;
+                display = block;
+            }
+ </style>
+<div ng-app='myApp' ng-controller='DataController' class="container">
+
+    <div infinite-scroll='loadMore()' infinite-scroll-distance='2'>
+
+        <div ng-repeat="user in data" class="userContainer">
+
+                <form  ng-mouseover="onMouseOver(user)" novalidate class="simple-form">
+                    <h4>{{user.first_name}} {{user.last_name}}</h4>
+                        <p>
+                            <b>Email:</b> {{user.email}}  -
+                            <b>Country:</b> {{user.country}}  -
+                            <b>IP:</b> {{user.ip_address}}
+                        </p>
+                        <p>
+
+                            <label>True:
+                                <input type="checkbox" ng-model = "user.pred_class0" ng-checked="user.pred_class0" ng-change="onChangeClass0(user)" >
+                            </label>
+                            <label>False:
+                                <input type="checkbox"  ng-model = "user.pred_class1" ng-checked="user.pred_class1" ng-change="onChangeClass1(user)">
+                            </label>
+                            <button ng-click='onCompleteTodo(user)'>Submit</button> {{user.pred}}{{boxTruevalue}} {{boxFalsevalue}}
+                        </p>
+                </form>
+
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+var myApp = angular.module('myApp', ['infinite-scroll']);
+myApp.controller('DataController', function($scope,$http) {
+   $http.get("/s/").then(function(r) {
+                    $scope.users = r.data.emails;
+                    $scope.data = $scope.users.slice(0, 10);
+                    $scope.loadMore = function () {
+                    $scope.data = $scope.users.slice(0, $scope.data.length + 2);
+                    };
+            });
+   $scope.onMouseOver = function(user){
+        console.log("mouse over user: " + user.id) }
+   $scope.onChangeClass0 = function(user){
+        user.pred_class1 = !user.pred_class0}
+   $scope.onChangeClass1 = function(user){
+        user.pred_class0 = !user.pred_class1}
+
+   $scope.onCompleteTodo = function(user) {
+        console.log("Checked box of user id: " + user.id);
+        $http({
+            method : 'POST',
+            url : '/',
+            data : angular.copy(user)
+        });
+    };
+});
+</script>
