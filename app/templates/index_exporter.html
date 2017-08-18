@@ -1,10 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/angular.js"></script>
+<script src="/static/js/ng-infinite-scroll.min.js"></script>
+<script src="/static/js/controller.js"></script>
+<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+
+<link rel="stylesheet" href="/static/css/index_style.css">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Machine Learning Projects Manager</title>
 </head>
 <body>
 
+
+<div ng-app="myApp" ng-controller="DataController" class="divMasterDetailWrapper" >
+    <div class="divFlag">
+
+    </div>
+    <div class="divMasterView" >
+        <div class="tab">
+
+        </div>
+        <div ng-repeat="experiment in data" class="ng-class: divUserView" ng-mouseover="onMouseOver(experiment)">
+                       <h4>{{experiment.timestamp}}</h4>
+
+
+             </div>
+
+    </div>
+    <div class="divDetailView">
+
+        <div class="container_experiment_header">
+            <div class="container_experiment_properties" data-value=''>
+                <table>
+                <tbody ng-repeat="(key, data) in selected_experiment_property">
+                <tr><td>{{key}}</td><td>{{data}}</td></tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+        <div id='scatterplot_container' class="container_experiment_plot">
+           <!-- load the d3.js library -->
+
+        </div>
+    </div>
+    <div class="divBottomFlag">
+
+    </div>
+</div>
+
 </body>
-</html>

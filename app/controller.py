@@ -1,6 +1,8 @@
 # glues model and view together
 from flask import Flask, send_file, render_template, request, jsonify
 import model
+import json
+from flask import Response
 app = Flask(__name__)
 
 @app.route('/',methods=['GET','POST'] )
@@ -11,19 +13,15 @@ def index():
         #UPDATE DATABASE -> update model? or on schedule?
 
         print(post_data)
-    return send_file("templates/index_v3.html" )
+    return send_file("templates/index_exporter.html" )
 
 @app.route('/s/', methods=['GET'])
 def search_query():
     """
     View which is called whenever the '/s/' this url is requested
     """
-
-    path_db = 'app_data/current_databases/'
-    #database_file = 'email_ICTU_database3.db'
-    #data = model.load_database(path_db,database_file)
-    print(model.python_data)
-    return jsonify(model.python_data)#jsonify(data)
+    experiment = model.load_experiment('exportexperiment.pkl')
+    return jsonify({'all_experiments':experiment})
 
 if __name__ == '__main__':
     app.run(debug=True)
