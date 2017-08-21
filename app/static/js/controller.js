@@ -2,12 +2,27 @@
 
 var myApp = angular.module('myApp',['infinite-scroll']);
 myApp.controller('DataController', function($rootScope,$scope,$http) {
- $scope.selected_experiment_property = 0;
-   $http.get("/s/").then(function(r) {
-                    $scope.data = r.data.all_experiments.new_project;
+ 
+$scope.selected_experiment_property = 0;
+$scope.data = {};
 
-                     console.log($scope.data)
-                     $scope.plot_data = $scope.data;
+function getExperimentProperty(){
+    var div_tabel = document.getElementsByClassName('container_experiment_properties')[0];
+    return div_tabel.getAttribute("data-value");
+}
+function setExperimentProperty(experiment,property){
+    var div_tabel = document.getElementsByClassName('container_experiment_properties')[0];
+    div_tabel.setAttribute("data-value",experiment[property] );
+    $scope.selected_experiment_property = experiment[property];
+    console.log( $scope.selected_experiment_property );
+    $scope.$apply()
+}
+ 
+   $http.get("/experiment/").then(function(r) {
+      $scope.data = r.data.all_experiments.new_project;
+
+     console.log($scope.data)
+     $scope.plot_data = $scope.data;
     $scope.selected_property = 'model_properties';
     $scope.selected_experiment =  $scope.data[0];
     $scope.selected_experiment_property = $scope.selected_experiment[$scope.selected_property];
@@ -91,20 +106,6 @@ myApp.controller('DataController', function($rootScope,$scope,$http) {
     function handleMouseOver(d, i) {
             setExperimentProperty(d,$scope.selected_property);
           };
-
-
-function getExperimentProperty(){
-    var div_tabel = document.getElementsByClassName('container_experiment_properties')[0];
-    return div_tabel.getAttribute("data-value");
-}
-function setExperimentProperty(experiment,property){
-    var div_tabel = document.getElementsByClassName('container_experiment_properties')[0];
-    div_tabel.setAttribute("data-value",experiment[property] );
-    $scope.selected_experiment_property = experiment[property];
-    console.log( $scope.selected_experiment_property );
-}
-
-
 //
 
 });

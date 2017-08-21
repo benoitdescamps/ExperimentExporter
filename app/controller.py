@@ -15,11 +15,9 @@ def index():
         print(post_data)
     return send_file("templates/index_exporter.html" )
 
-@app.route('/s/', methods=['GET'])
+@app.route('/experiment/', methods=['GET'])
 def search_query():
-    """
-    View which is called whenever the '/s/' this url is requested
-    """
+
     experiment = model.load_experiment('exportexperiment.pkl')
     return jsonify({'all_experiments':experiment})
 
